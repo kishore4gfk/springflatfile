@@ -10,6 +10,7 @@ public class Person {
     private int id;
     private String firstName;
     private String lastName;
+    private Address address;
 
     @XmlAttribute(name = "id")
     public int getId() {
@@ -36,6 +37,15 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @XmlElement(name = "address")
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override
