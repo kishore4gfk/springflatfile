@@ -11,6 +11,7 @@ public class Person {
     private String firstName;
     private String lastName;
     private Address address;
+    private Submitter submitter;
 
     @XmlAttribute(name = "id")
     public int getId() {
@@ -48,12 +49,23 @@ public class Person {
         this.address = address;
     }
 
+    @XmlElement(name = "submitter")
+    public Submitter getSubmitter() {
+        return submitter;
+    }
+
+    public void setSubmitter(Submitter submitter) {
+        this.submitter = submitter;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", address=" + address +
+                ", submitter=" + submitter +
                 '}';
     }
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<personInfo>
+    <person id="0">
+        <submitter id="0">
+            <name>kishore</name>
+        </submitter>
+    </person>
+    <person id="1000">
+        <address>
+            <addressLine1>line1</addressLine1>
+            <addressLine2>line2</addressLine2>
+            <addressLine3>line3</addressLine3>
+        </address>
+        <firstName>Soumitra</firstName>
+        <lastName>Roy</lastName>
+    </person>
+    <person id="1001">
+        <address>
+            <addressLine1>line1</addressLine1>
+            <addressLine2>line2</addressLine2>
+            <addressLine3>line3</addressLine3>
+        </address>
+        <firstName>Souvik</firstName>
+        <lastName>Sanyal</lastName>
+    </person>
+    <person id="1002">
+        <address>
+            <addressLine1>line1</addressLine1>
+            <addressLine2>line2</addressLine2>
+            <addressLine3>line3</addressLine3>
+        </address>
+        <firstName>Arup</firstName>
+        <lastName>Chatterjee</lastName>
+    </person>
+    <person id="1003">
+        <address>
+            <addressLine1>line1</addressLine1>
+            <addressLine2>line2</addressLine2>
+            <addressLine3>line3</addressLine3>
+        </address>
+        <firstName>Suman</firstName>
+        <lastName>Mukherjee</lastName>
+    </person>
+    <person id="1004">
+        <address>
+            <addressLine1>line1</addressLine1>
+            <addressLine2>line2</addressLine2>
+            <addressLine3>line3</addressLine3>
+        </address>
+        <firstName>Debina</firstName>
+        <lastName>Guha</lastName>
+    </person>
+    <person id="1005">
+        <address>
+            <addressLine1>line1</addressLine1>
+            <addressLine2>line2</addressLine2>
+            <addressLine3>line3</addressLine3>
+        </address>
+        <firstName>Liton</firstName>
+        <lastName>Sarkar</lastName>
+    </person>
+    <person id="1006">
+        <address>
+            <addressLine1>line1</addressLine1>
+            <addressLine2>line2</addressLine2>
+            <addressLine3>line3</addressLine3>
+        </address>
+        <firstName>Debabrata</firstName>
+        <lastName>Poddar</lastName>
+    </person>
+</personInfo>

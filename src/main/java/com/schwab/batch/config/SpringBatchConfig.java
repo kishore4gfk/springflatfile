@@ -17,10 +17,10 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
 import org.springframework.batch.item.file.transform.LineTokenizer;
+import org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer;
 import org.springframework.batch.item.file.transform.Range;
 import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+
+import java.util.HashMap;
 
 
 @Configuration
@@ -41,10 +43,10 @@ public class SpringBatchConfig {
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
 
-    @Value("inputflat.dat")
+    @Value("input1.dat")
     private Resource inputFlatFile;
 
-    @Value("file:person3.xml")
+    @Value("file:person4.xml")
     private Resource outputXml;
 
     @Bean
@@ -86,28 +88,88 @@ public class SpringBatchConfig {
     }*/
 
     @Bean
-    public FlatFileItemReader<Person> fileItemReader() {
+    public FlatFileItemReader<Person> fileItemReader(LineTokenizer lineTokenizer) {
         FlatFileItemReader<Person> fileItemReader = new FlatFileItemReader<>();
         fileItemReader.setResource(inputFlatFile);
-        fileItemReader.setLineMapper(personLineMapper());
+
+        DefaultLineMapper<Person> mapper = new DefaultLineMapper<Person>();
+        mapper.setLineTokenizer(lineTokenizer);
+
+        mapper.setFieldSetMapper(new PersonFieldSetMapper());
+
+        fileItemReader.setLineMapper(mapper);
         return fileItemReader;
     }
 
     @Bean
-    public LineMapper<Person> personLineMapper() {
-        DefaultLineMapper<Person> mapper = new DefaultLineMapper<Person>();
-        mapper.setLineTokenizer(personLineTokenizer());
-        mapper.setFieldSetMapper(new PersonFieldSetMapper());
-        return mapper;
+    public LineTokenizer fixedFileDescriptor() {
+        PatternMatchingCompositeLineTokenizer rc = new PatternMatchingCompositeLineTokenizer();
+
+        HashMap<String, LineTokenizer> matchers = new HashMap<>();
+        matchers.put("RS*", submitterRecordTokenizer());
+        //matchers.put("RA*", employerRecordTokenizer());
+        //matchers.put("RT*", endRecordTokenizer());
+        matchers.put("*", employeeRecordTokenizer());
+
+        rc.setTokenizers(matchers);
+        return rc;
     }
 
-    @Bean
+    private LineTokenizer employeeRecordTokenizer() {
+        FixedLengthTokenizer tokenizer = new FixedLengthTokenizer();
+        String[] names = new String[]{"recordType", "id", "firstName", "lastName", "line1", "line2", "line3"};
+        tokenizer.setNames(names);
+        Range[] ranges = new Range[]{
+                new Range(1, 2),
+                new Range(3, 7),
+                new Range(8, 19),
+                new Range(20, 32),
+                new Range(33, 41),
+                new Range(42, 49),
+                new Range(50, 54)
+
+        };
+
+        // tokenizer.setColumns(new Range[]{new Range(1, 5), new Range(6, 16), new Range(17, 29)});
+        //tokenizer.setNames(new String[]{"id", "firstName", "lastName"});
+        tokenizer.setColumns(ranges);
+        return tokenizer;
+    }
+
+    private LineTokenizer endRecordTokenizer() {
+        FixedLengthTokenizer rc = new FixedLengthTokenizer();
+        String[] names = new String[]{"count"};
+        Range[] ranges = new Range[]{new Range(1, 3)};
+        rc.setNames(names);
+        rc.setColumns(ranges);
+        return rc;
+    }
+
+    private LineTokenizer employerRecordTokenizer() {
+        FixedLengthTokenizer rc = new FixedLengthTokenizer();
+        String[] names = new String[]{"employerName"};
+        Range[] ranges = new Range[]{new Range(1, 11)};
+        rc.setNames(names);
+        rc.setColumns(ranges);
+        return rc;
+    }
+
+    private LineTokenizer submitterRecordTokenizer() {
+        FixedLengthTokenizer rc = new FixedLengthTokenizer();
+        String[] names = new String[]{"recordType", "id", "submitterName"};
+        Range[] ranges = new Range[]{new Range(1, 2), new Range(3, 7), new Range(8, 14)};
+        rc.setNames(names);
+        rc.setColumns(ranges);
+        return rc;
+    }
+
+    /*@Bean
     public LineTokenizer personLineTokenizer() {
         FixedLengthTokenizer tokenizer = new FixedLengthTokenizer();
         tokenizer.setColumns(new Range[]{new Range(1, 5), new Range(6, 16), new Range(17, 29)});
         tokenizer.setNames(new String[]{"id", "firstName", "lastName"});
         return tokenizer;
-    }
+    }*/
 
 
     @Bean(destroyMethod = "")
